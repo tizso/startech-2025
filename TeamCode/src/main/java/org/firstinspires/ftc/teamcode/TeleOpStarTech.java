@@ -3,12 +3,13 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
+@Disabled
 @TeleOp(name = "TeleOp StarTech - 2025", group="00-TeleOp")
 public class TeleOpStarTech extends LinearOpMode {
 
@@ -23,13 +24,13 @@ public class TeleOpStarTech extends LinearOpMode {
         telemetry.addData("Initializing FTC TeleOp adopted for Team:","18338");
         telemetry.update();
 
-        robot.slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        robot.slider.setDirection(DcMotorEx.Direction.FORWARD);
-        robot.slider.setTargetPosition(0);
-        robot.slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.slider.setPower(0.9);
+        robot.liftMotor.setDirection(DcMotorEx.Direction.FORWARD);
+        robot.liftMotor.setTargetPosition(0);
+        robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.liftMotor.setPower(0.9);
         sleep(200);
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
@@ -41,6 +42,7 @@ public class TeleOpStarTech extends LinearOpMode {
                 SLOW_DOWN_FACTOR = 0.3;
             }
             if(gamepad1.a ){
+
                 SLOW_DOWN_FACTOR = 0.9;
             }
 
@@ -102,10 +104,10 @@ public class TeleOpStarTech extends LinearOpMode {
             }
 
             if(gamepad2.a){
-                robot.arm.setDirection(DcMotorSimple.Direction.REVERSE);
+               /* robot.arm.setDirection(DcMotorSimple.Direction.REVERSE);
                 robot.arm.setTargetPosition(100);
                 robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.arm.setPower(0.5);
+                robot.arm.setPower(0.5);*/
                 sleep(200);
             }
 
@@ -140,10 +142,10 @@ public class TeleOpStarTech extends LinearOpMode {
             telemetry.addData("x", drive.pose.position.x);
             telemetry.addData("y", drive.pose.position.y);
             telemetry.addData("heading", Math.toDegrees(drive.pose.heading.log()));
-            telemetry.addData("slider position",robot.slider.getCurrentPosition());
-            telemetry.addData("srm", robot.arm.getCurrentPosition());
-            telemetry.addData("collector", robot.collector.getPosition());
-            telemetry.addData("intake: ", robot.intake.getDirection());
+            //telemetry.addData("slider position",robot.slider.getCurrentPosition());
+           // telemetry.addData("srm", robot.arm.getCurrentPosition());
+            //telemetry.addData("collector", robot.collector.getPosition());
+            //telemetry.addData("intake: ", robot.intake.getDirection());
 
             telemetry.update();
         }

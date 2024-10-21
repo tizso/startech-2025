@@ -3,19 +3,23 @@ package org.firstinspires.ftc.teamcode;
 import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
 public class HardwareBox extends LinearOpMode{
     //public NormalizedColorSensor color;
 
-    public DcMotor slider = null;
-    public DcMotor arm = null;
-    public Servo intake = null;
-    public Servo collector = null;
+    public DcMotor armMotor = null;
+    public DcMotor liftMotor = null;
+    public CRServo collector = null;
+    //public Servo collector = null;
 
     HardwareMap hwMap		   =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -32,23 +36,33 @@ public class HardwareBox extends LinearOpMode{
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        slider = hwMap.get(DcMotor.class, "slider");
-        arm = hwMap.get(DcMotor.class, "arm");
+        liftMotor = hwMap.get(DcMotor.class, "liftMotor");
+        armMotor = hwMap.get(DcMotor.class, "armMotor");
+
+
+        armMotor.setPower(0.0);
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         //color = hardwareMap.get(NormalizedColorSensor.class, "color");
 
-        // Set all motors to zero power
-        slider.setPower(0.0);
+/*        armMotor.setTargetPosition(0);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);*/
 
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-        slider.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        /*liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        liftMotor.setTargetPosition(0);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);*/
+
+
         // Define and initialize ALL installed servos.
-        intake = hwMap.get(Servo.class, "intake");
-        collector = hwMap.get(Servo.class, "rightS");
+        collector = hwMap.get(CRServo.class, "collector");
+        //collector = hwMap.get(Servo.class, "rightS");
 
-        intake.setPosition(0.0);
-        collector.setPosition(0.0);
+        collector.setPower(0.0);
+        //collector.setPosition(0.0);
 
 
     }
@@ -62,14 +76,14 @@ public class HardwareBox extends LinearOpMode{
     }
 
 
-    public void sliderUp(){
+   /* public void sliderUp(){
         slider.setDirection(DcMotorEx.Direction.FORWARD);
         slider.setTargetPosition(240);
         slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slider.setPower(0.7);
 
         safeWaitSeconds(1);
-    }
+    }*/
 
     public void putSpecimen(){
         safeWaitSeconds(1);
