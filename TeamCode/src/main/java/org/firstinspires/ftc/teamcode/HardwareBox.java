@@ -5,13 +5,9 @@ import static com.qualcomm.robotcore.util.ElapsedTime.Resolution.SECONDS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 public class HardwareBox extends LinearOpMode{
     //public NormalizedColorSensor color;
@@ -47,14 +43,14 @@ public class HardwareBox extends LinearOpMode{
 
         //color = hardwareMap.get(NormalizedColorSensor.class, "color");
 
-/*        armMotor.setTargetPosition(0);
+        armMotor.setTargetPosition(0);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);*/
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        /*liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         liftMotor.setTargetPosition(0);
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);*/
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
         // Define and initialize ALL installed servos.
@@ -85,8 +81,30 @@ public class HardwareBox extends LinearOpMode{
         safeWaitSeconds(1);
     }*/
 
-    public void putSpecimen(){
-        safeWaitSeconds(1);
+    public void openArm(){
+        armMotor.setTargetPosition(750);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setPower(0.5);
+        liftMotor.setTargetPosition(500);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor.setPower(0.7);
+    }
+    public void closeArm(){
+        armMotor.setTargetPosition(0);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setPower(0.3);
+        liftMotor.setTargetPosition(5);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor.setPower(0.7);
+    }
+
+    public void highBasketUp(){
+        armMotor.setTargetPosition(750);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setPower(0.5);
+        liftMotor.setTargetPosition(1000);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor.setPower(0.7);
     }
 
     public void dropSample(){

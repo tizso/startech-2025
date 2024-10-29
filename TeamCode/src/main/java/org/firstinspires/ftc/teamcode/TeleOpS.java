@@ -12,16 +12,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
-
+@Disabled
 @TeleOp(name = "TeleOp StarTech - 2025", group="00-TeleOp")
 public class TeleOpS extends LinearOpMode {
 
     HardwareBox robot = new HardwareBox();
-    /*final double ARM_TICKS_PER_DEGREE =
-            28 // number of encoder ticks per rotation of the bare motor
-                    * 250047.0 / 4913.0 // This is the exact gear ratio of the 50.9:1 Yellow Jacket gearbox
-                    * 100.0 / 20.0 // This is the external gear reduction, a 20T pinion gear that drives a 100T hub-mount gear
-                    * 1/360.0;*/
+
     final double ARM_TICKS_PER_DEGREE = 28*94329.0/4913.0*100.0/20.0*1/360;
     final double ARM_COLLAPSED_INTO_ROBOT  = 0;
     final double ARM_COLLECT               = 0 * ARM_TICKS_PER_DEGREE;

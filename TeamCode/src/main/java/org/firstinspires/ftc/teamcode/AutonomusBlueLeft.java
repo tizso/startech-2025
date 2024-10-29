@@ -3,10 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
 @Autonomous(name = "Autonomous StarTech old", group = "00-Autonomous", preselectTeleOp = "StarTech")
@@ -31,6 +30,17 @@ public class AutonomusBlueLeft extends LinearOpMode {
         robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.arm.setPower(0.9);*/
         sleep(200);
+        robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        robot.armMotor.setTargetPosition(0);
+        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.liftMotor.setTargetPosition(0);
+        robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Wait for the DS start button to be touched.
         telemetry.addData(">", "Touch Play to start OpMode");
@@ -55,10 +65,10 @@ public class AutonomusBlueLeft extends LinearOpMode {
         //Initialize Pose2d as desired
         Pose2d initPose = new Pose2d(0, 0, 0); // Starting Pose
         Pose2d moveToChambers = new Pose2d(0,0,0);
+        Pose2d moveBack = new Pose2d(0, 0, 0);
         Pose2d pickUpSemple1 = new Pose2d(0, 0, 0);
         Pose2d pickUpSemple2 = new Pose2d(0, 0, 0);
         Pose2d moveToBaskets1 = new Pose2d(0,0,0);
-        Pose2d pickUpSemple21 = new Pose2d(0, 0, 0);
         Pose2d moveToBaskets2 = new Pose2d(0,0,0);
         Pose2d pickUpSemple3 = new Pose2d(0, 0, 0);
         Pose2d moveToBaskets3 = new Pose2d(0,0,0);
@@ -66,36 +76,45 @@ public class AutonomusBlueLeft extends LinearOpMode {
 
         double waitSecondsBeforeDrop = 0;
 
-        moveToChambers = new Pose2d(34,0,0);
+        moveToChambers = new Pose2d(34,-8,0);
 
         //identified Spike Mark Location
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
 
-        pickUpSemple1 = new Pose2d(20, 20, Math.toRadians(90));
-        pickUpSemple2 = new Pose2d(42, 25, Math.toRadians(90));
-        pickUpSemple21 = new Pose2d(42, 33, Math.toRadians(90));
-        pickUpSemple3 = new Pose2d(42, 38, Math.toRadians(90));
-        moveToBaskets1 = new Pose2d(18, 35, Math.toRadians(135));
+        moveBack = new Pose2d(20, 23, Math.toRadians(90));
+        pickUpSemple1 = new Pose2d(38, 33, Math.toRadians(90));
+        pickUpSemple2 = new Pose2d(38, 15, Math.toRadians(90));
+        pickUpSemple3 = new Pose2d(38, 36, Math.toRadians(90));
+        moveToBaskets1 = new Pose2d(16, 30, Math.toRadians(135));
 
 
-        waitSecondsBeforeDrop = 1; //TODO: Adjust time to wait for alliance partner to move from board
+        waitSecondsBeforeDrop = 0.5; //TODO: Adjust time to wait for alliance partner to move from board
 
         //parking left side
-        parkPose = new Pose2d(-13, 36, Math.toRadians(-90));
+        parkPose = new Pose2d(60, 12, Math.toRadians(90));
 
+        robot.openArm();
         //Move robot to dropPurplePixel based on identified Spike Mark Location
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(moveToChambers.position, moveToChambers.heading)
                         .build());
 
+        robot.safeWaitSeconds(1);
+
+
         //TODO : Code to put specimen to high chambers
-        robot.putSpecimen();
 
         //Move robot to pick up yellow sample
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(pickUpSemple1.position, pickUpSemple1.heading)
+                        .strafeToLinearHeading(moveBack.position, moveBack.heading)
+                        .build());
+
+        robot.closeArm();
+        robot.safeWaitSeconds(0.5);
+        Actions.runBlocking(
+                drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(pickUpSemple2.position, pickUpSemple2.heading)
                         .build());
 
@@ -108,9 +127,13 @@ public class AutonomusBlueLeft extends LinearOpMode {
                         .build());
         robot.safeWaitSeconds(waitSecondsBeforeDrop);
 
+        robot.highBasketUp();
+        robot.safeWaitSeconds(2);
+        robot.closeArm();
+
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(pickUpSemple21.position, pickUpSemple21.heading)
+                        .strafeToLinearHeading(pickUpSemple1.position, pickUpSemple1.heading)
                         .build());
 
         robot.safeWaitSeconds(waitSecondsBeforeDrop);
@@ -118,6 +141,10 @@ public class AutonomusBlueLeft extends LinearOpMode {
                 drive.actionBuilder(drive.pose)
                         .splineToLinearHeading(moveToBaskets1,0)
                         .build());
+
+        robot.highBasketUp();
+        robot.safeWaitSeconds(2);
+        robot.closeArm();
 
         robot.safeWaitSeconds(waitSecondsBeforeDrop);
 
@@ -133,21 +160,19 @@ public class AutonomusBlueLeft extends LinearOpMode {
                         .build());
 
         //TODO : Code to drop Semple on Basket
-        robot.safeWaitSeconds(1);
-        //robot.sliderUp();
+        robot.highBasketUp();
+        robot.safeWaitSeconds(2);
+        robot.closeArm();
 
         robot.safeWaitSeconds(0.5);
-        robot.dropSample();
 
         //TODO : Code to drop Pixel on Backdrop
-        robot.safeWaitSeconds(1);
 
         //Move robot to park in Backstage
-        /*Actions.runBlocking(
+        Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(parkPose.position, parkPose.heading)
                         .build());
-        robot.safeWaitSeconds(0.5);*/
 
     }
 
