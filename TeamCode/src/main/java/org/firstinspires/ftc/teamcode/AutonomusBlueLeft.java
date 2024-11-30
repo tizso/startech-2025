@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
-@Autonomous(name = "Autonomous StarTech old", group = "00-Autonomous", preselectTeleOp = "StarTech")
+@Autonomous(name = "Autonomous StarTech", group = "00-Autonomous", preselectTeleOp = "StarTech")
 public class AutonomusBlueLeft extends LinearOpMode {
     public static String TEAM_NAME = "StarTech";
     public static int TEAM_NUMBER = 18338;
@@ -30,7 +30,7 @@ public class AutonomusBlueLeft extends LinearOpMode {
         robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.arm.setPower(0.9);*/
         sleep(200);
-        robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        /*robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         robot.armMotor.setTargetPosition(0);
@@ -40,7 +40,7 @@ public class AutonomusBlueLeft extends LinearOpMode {
         robot.liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         robot.liftMotor.setTargetPosition(0);
         robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);*/
 
         // Wait for the DS start button to be touched.
         telemetry.addData(">", "Touch Play to start OpMode");
