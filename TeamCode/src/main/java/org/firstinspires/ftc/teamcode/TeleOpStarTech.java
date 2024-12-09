@@ -146,9 +146,11 @@ public class TeleOpStarTech extends LinearOpMode {
                 /* This is the correct height to score the sample in the HIGH BASKET */
                 //armPosition = ARM_SCORE_SAMPLE_IN_LOW;
                 //liftPosition = LIFT_SCORING_IN_HIGH_BASKET;
-                robot.slider.setPosition(0.0);
+                robot.slider1.setPosition(0.0);
+                robot.slider2.setPosition(0.0);
             } else if(gamepad1.y){
-                robot.slider.setPosition(0.5);
+                robot.slider1.setPosition(0.5);
+                robot.slider2.setPosition(0.5);
             }
 
             else if (gamepad1.dpad_left) {
