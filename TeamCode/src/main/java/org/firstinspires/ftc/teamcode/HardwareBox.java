@@ -52,8 +52,8 @@ public class HardwareBox extends LinearOpMode{
         arm = hwMap.get(Servo.class, "arm");
         rotate = hwMap.get(Servo.class, "rotate");
 
-        claw.setPosition(0.9);
-        arm.setPosition(0.0);
+        claw.setPosition(0.69);
+        arm.setPosition(0.9);
         rotate.setPosition(0.0);
     }
 

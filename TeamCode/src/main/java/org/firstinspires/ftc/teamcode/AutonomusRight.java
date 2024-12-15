@@ -61,11 +61,11 @@ public class AutonomusRight extends LinearOpMode {
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
 
-        moveToChambers = new Pose2d(27,8,0);
-        moveToChambers1 = new Pose2d(17,8,0);
+        moveToChambers = new Pose2d(29,12,0);
+        moveToChambers1 = new Pose2d(15,15,0);
         moveRight = new Pose2d(30,-22, Math.toRadians(180));
         moveBack = new Pose2d(55, -27, Math.toRadians(180));
-        backSmp1 = new Pose2d(58,-33, Math.toRadians(180));
+        backSmp1 = new Pose2d(58,-30, Math.toRadians(180));
         pushSmp1 = new Pose2d(12,-33, Math.toRadians(180));
         moveBack2 = new Pose2d(58,-33, Math.toRadians(180));
         backSmp2 = new Pose2d(58,-40, Math.toRadians(180));
@@ -75,7 +75,8 @@ public class AutonomusRight extends LinearOpMode {
         //parking left side
         parkPose = new Pose2d(60, 12, Math.toRadians(90));
 
-        robot.highChamber(1680);
+        robot.highChamber(1000);
+        robot.moveClaw(0.55);
         //Move robot to dropPurplePixel based on identified Spike Mark Location
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
@@ -103,7 +104,7 @@ public class AutonomusRight extends LinearOpMode {
 
         robot.safeWaitSeconds(waitSecondsBeforeDrop);
         robot.moveArm(ARM_WALL);
-        robot.moveSliders(50,0.9);
+        robot.moveSliders(250,0.9);
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
@@ -113,7 +114,7 @@ public class AutonomusRight extends LinearOpMode {
         robot.moveClaw(CLAW_CLOSE);
         robot.safeWaitSeconds(waitSecondsBeforeDrop);
         robot.moveArm(ARM_CHAMB);
-        robot.moveSliders(1820, 0.9);
+        robot.moveSliders(950, 0.9);
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
