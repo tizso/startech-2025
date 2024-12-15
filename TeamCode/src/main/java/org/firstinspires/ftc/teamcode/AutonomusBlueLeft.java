@@ -4,11 +4,9 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
-@Autonomous(name = "Autonomous StarTech", group = "00-Autonomous", preselectTeleOp = "StarTech")
+@Autonomous(name = "Autonomous Left", group = "00-Autonomous", preselectTeleOp = "StarTech")
 public class AutonomusBlueLeft extends LinearOpMode {
     public static String TEAM_NAME = "StarTech";
     public static int TEAM_NUMBER = 18338;
@@ -93,7 +91,7 @@ public class AutonomusBlueLeft extends LinearOpMode {
         //parking left side
         parkPose = new Pose2d(60, 12, Math.toRadians(90));
 
-        robot.openArm();
+        robot.moveArm(0.0);
         //Move robot to dropPurplePixel based on identified Spike Mark Location
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
@@ -111,7 +109,7 @@ public class AutonomusBlueLeft extends LinearOpMode {
                         .strafeToLinearHeading(moveBack.position, moveBack.heading)
                         .build());
 
-        robot.closeArm();
+        robot.moveArm(0.5);
         robot.safeWaitSeconds(0.5);
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
@@ -129,7 +127,7 @@ public class AutonomusBlueLeft extends LinearOpMode {
 
         robot.highBasketUp();
         robot.safeWaitSeconds(2);
-        robot.closeArm();
+        robot.moveArm(0.5);
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
@@ -144,7 +142,7 @@ public class AutonomusBlueLeft extends LinearOpMode {
 
         robot.highBasketUp();
         robot.safeWaitSeconds(2);
-        robot.closeArm();
+        robot.moveArm(0.5);
 
         robot.safeWaitSeconds(waitSecondsBeforeDrop);
 
@@ -162,7 +160,7 @@ public class AutonomusBlueLeft extends LinearOpMode {
         //TODO : Code to drop Semple on Basket
         robot.highBasketUp();
         robot.safeWaitSeconds(2);
-        robot.closeArm();
+        robot.moveArm(0.5);
 
         robot.safeWaitSeconds(0.5);
 

@@ -12,14 +12,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwareBox extends LinearOpMode{
     //public NormalizedColorSensor color;
 
-    public DcMotor rSlider = null;
-    public DcMotor lSlider = null;
+    public DcMotor slider = null;
+
     //public CRServo collector = null;
-    public Servo leftS = null;
-    public Servo rightS = null;
     public Servo claw = null;
-    public Servo slider1 = null;
-    public Servo slider2 = null;
+    public Servo arm = null;
+
+    public Servo rotate = null;
 
     HardwareMap hwMap		   =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -36,48 +35,26 @@ public class HardwareBox extends LinearOpMode{
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        rSlider = hwMap.get(DcMotor.class, "RSlider");
-        lSlider = hwMap.get(DcMotor.class, "LSlider");
+        slider = hwMap.get(DcMotor.class, "Slider");
 
-        rSlider.setDirection(DcMotorSimple.Direction.REVERSE);
+        slider.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
-        rSlider.setPower(0.0);
-        rSlider.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rSlider.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        lSlider.setPower(0.0);
-        lSlider.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lSlider.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        slider.setPower(0.0);
+        slider.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slider.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //color = hardwareMap.get(NormalizedColorSensor.class, "color");
 
-        /*LSlider.setTargetPosition(0);
-        LSlider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LSlider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);*/
-
-        /*rSlider.setDirection(DcMotorSimple.Direction.REVERSE);
-        rSlider.setTargetPosition(0);
-        rSlider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rSlider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);*/
-
-
         // Define and initialize ALL installed servos.
-        leftS = hwMap.get(Servo.class, "leftS");
-        rightS = hwMap.get(Servo.class, "rightS");
         claw = hwMap.get(Servo.class, "claw");
-        slider1 = hwMap.get(Servo.class, "slider1");
-        slider2 = hwMap.get(Servo.class, "slider2");
+        arm = hwMap.get(Servo.class, "arm");
+        rotate = hwMap.get(Servo.class, "rotate");
 
-        /*leftS.setPosition(0.05);
-        rightS.setPosition(0.05);
-        slider.setPosition(0.0);*/
-        /*claw.setPosition(0.0);*/
-        slider1.setPosition(0.0);
-        slider2.setPosition(0.0);
-
-
+        claw.setPosition(0.9);
+        arm.setPosition(0.0);
+        rotate.setPosition(0.0);
     }
 
 
@@ -98,31 +75,28 @@ public class HardwareBox extends LinearOpMode{
         safeWaitSeconds(1);
     }*/
 
-    public void openArm(){
-        /*armMotor.setTargetPosition(750);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setPower(0.5);
-        liftMotor.setTargetPosition(500);
-        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setPower(0.7);*/
+    public void moveArm(double a){
+        arm.setPosition(a);
     }
-    public void closeArm(){
-        /*armMotor.setTargetPosition(0);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setPower(0.3);
-        liftMotor.setTargetPosition(5);
-        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setPower(0.7);*/
+    public void moveClaw(double value){
+        claw.setPosition(value);
+    }
+    public void moveSliders(int value, double speed){
+        slider.setTargetPosition(value);
+        slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slider.setPower(speed);
+
     }
 
-    public void moveSliders(int value){
-        rSlider.setTargetPosition(value);
-        rSlider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rSlider.setPower(0.5);
+    public void highChamber(int value){
+        slider.setTargetPosition(value);
+        slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slider.setPower(0.8);
+        arm.setPosition(0.9);
+    }
 
-        lSlider.setTargetPosition(value);
-        lSlider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lSlider.setPower(0.5);
+    public void wall(){
+
     }
 
     public void highBasketUp(){
