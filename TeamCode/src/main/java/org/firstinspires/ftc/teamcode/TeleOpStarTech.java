@@ -37,6 +37,7 @@ public class TeleOpStarTech extends LinearOpMode {
     boolean arm = false;
     boolean claw = false;
     boolean spec = false;
+    boolean sliderServo = false;
 
     double pos = 0;
     int sliderPos = 0;
@@ -84,7 +85,7 @@ public class TeleOpStarTech extends LinearOpMode {
                 slow = !slow;
             } else if (gamepad1.b){
 
-                robot.moveSliders(0, sliderSpeed);
+                robot.moveSliders(0, 0.4);
             }
 
             else if (gamepad1.x){
@@ -135,7 +136,8 @@ public class TeleOpStarTech extends LinearOpMode {
                 sleep(200);
             } else if(currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
                 claw = !claw;
-            } else if (gamepad2.left_bumper) {
+            } else if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
+                sliderServo = !sliderServo;
                 sleep(200);
             }
 
@@ -160,7 +162,13 @@ public class TeleOpStarTech extends LinearOpMode {
                 robot.claw.setPosition(0.9);
             }
 
-            if(robot.slider.getCurrentPosition()<100 && !gamepad1.x && !gamepad1.y){
+            if(sliderServo){
+                robot.sliderServo.setPosition(0.55);
+            } else {
+                robot.sliderServo.setPosition(0.1);
+            }
+
+            if(robot.slider.getCurrentPosition()<300 && !gamepad1.x && !gamepad1.y){
                 robot.slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 

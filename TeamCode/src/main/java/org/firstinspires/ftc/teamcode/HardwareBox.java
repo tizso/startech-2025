@@ -19,6 +19,7 @@ public class HardwareBox extends LinearOpMode{
     public Servo arm = null;
 
     public Servo rotate = null;
+    public Servo sliderServo = null;
 
     HardwareMap hwMap		   =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -51,10 +52,13 @@ public class HardwareBox extends LinearOpMode{
         claw = hwMap.get(Servo.class, "claw");
         arm = hwMap.get(Servo.class, "arm");
         rotate = hwMap.get(Servo.class, "rotate");
+        sliderServo = hwMap.get(Servo.class, "slide");
 
-        claw.setPosition(0.69);
+
+        claw.setPosition(0.55);
         arm.setPosition(0.9);
         rotate.setPosition(0.0);
+        sliderServo.setPosition(0.1);
     }
 
 
