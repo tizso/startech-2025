@@ -10,9 +10,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class HardwareBox extends LinearOpMode{
+
+    double SLIDER_DIFF = 0.956;
     //public NormalizedColorSensor color;
 
     public DcMotor slider = null;
+    public DcMotor slider2 = null;
 
     //public CRServo collector = null;
     public Servo claw = null;
@@ -37,14 +40,21 @@ public class HardwareBox extends LinearOpMode{
 
         // Define and Initialize Motors
         slider = hwMap.get(DcMotor.class, "Slider");
+        slider2 = hwMap.get(DcMotor.class, "Slider2");
 
         slider.setDirection(DcMotorSimple.Direction.FORWARD);
+        slider2.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         slider.setPower(0.0);
         slider.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slider.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        slider2.setPower(0.0);
+        slider2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slider2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slider2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //color = hardwareMap.get(NormalizedColorSensor.class, "color");
 
@@ -55,10 +65,13 @@ public class HardwareBox extends LinearOpMode{
         sliderServo = hwMap.get(Servo.class, "slide");
 
 
-        claw.setPosition(0.55);
-        arm.setPosition(0.9);
-        rotate.setPosition(0.0);
-        sliderServo.setPosition(0.1);
+
+
+        claw.setPosition(0.9);
+        //claw.setPosition(0.55);
+        //arm.setPosition(0.9);
+        rotate.setPosition(0.1);
+        sliderServo.setPosition(0.2);
     }
 
 
@@ -85,17 +98,30 @@ public class HardwareBox extends LinearOpMode{
     public void moveClaw(double value){
         claw.setPosition(value);
     }
-    public void moveSliders(int value, double speed){
-        slider.setTargetPosition(value);
+    public void moveSliders(int v1, double speed){
+
+        int v2 = (int)Math.round(v1*SLIDER_DIFF);
+
+        slider.setTargetPosition(v1);
         slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slider.setPower(speed);
 
+        slider2.setTargetPosition(v2);
+        slider2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slider2.setPower(speed);
+
     }
 
-    public void highChamber(int value){
-        slider.setTargetPosition(value);
+    public void highChamber(int v1){
+        int v2 = (int)Math.round(v1*SLIDER_DIFF);
+
+        slider.setTargetPosition(v1);
         slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slider.setPower(0.8);
+
+        slider2.setTargetPosition(v2);
+        slider2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slider2.setPower(0.8);
         arm.setPosition(0.9);
     }
 
@@ -103,17 +129,15 @@ public class HardwareBox extends LinearOpMode{
 
     }
 
-    public void highBasketUp(){
-        /*armMotor.setTargetPosition(750);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setPower(0.5);
-        liftMotor.setTargetPosition(1000);
-        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setPower(0.7);*/
-    }
+    public void putSpec(){
+        safeWaitSeconds(0.2);
+        moveArm(0.5);
+        safeWaitSeconds(0.1);
+        moveArm(0.3);
+        safeWaitSeconds(0.2);
+        moveClaw(0.0);
 
-    public void dropSample(){
-        safeWaitSeconds(1);
+
     }
 
 

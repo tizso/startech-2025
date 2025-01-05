@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
 @Autonomous(name = "Autonomous Left", group = "00-Autonomous", preselectTeleOp = "StarTech")
-public class AutonomusBlueLeft extends LinearOpMode {
+public class AutonomusLeft extends LinearOpMode {
     public static String TEAM_NAME = "StarTech";
     public static int TEAM_NUMBER = 18338;
 
@@ -19,6 +19,8 @@ public class AutonomusBlueLeft extends LinearOpMode {
         //Activate Camera Vision that uses TensorFlow for pixel detection
 
         robot.init(hardwareMap);
+
+        robot.arm.setPosition(0.9);
        /* robot.slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -74,32 +76,34 @@ public class AutonomusBlueLeft extends LinearOpMode {
 
         double waitSecondsBeforeDrop = 0;
 
-        moveToChambers = new Pose2d(34,-8,0);
+
 
         //identified Spike Mark Location
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
+        moveToChambers = new Pose2d(24,-8,0);
+        moveBack = new Pose2d(20, 20, Math.toRadians(90));
+        pickUpSemple1 = new Pose2d(38.2, 24.5, Math.toRadians(90));
+        pickUpSemple2 = new Pose2d(37, 34, Math.toRadians(90));
+        pickUpSemple3 = new Pose2d(36, 44.5, Math.toRadians(90));
+        moveToBaskets1 = new Pose2d(11.0, 37.0, Math.toRadians(150));
+        moveToBaskets2 = new Pose2d(11.5, 36.5, Math.toRadians(150));
 
-        moveBack = new Pose2d(20, 23, Math.toRadians(90));
-        pickUpSemple1 = new Pose2d(38, 33, Math.toRadians(90));
-        pickUpSemple2 = new Pose2d(38, 15, Math.toRadians(90));
-        pickUpSemple3 = new Pose2d(38, 36, Math.toRadians(90));
-        moveToBaskets1 = new Pose2d(16, 30, Math.toRadians(135));
 
-
-        waitSecondsBeforeDrop = 0.5; //TODO: Adjust time to wait for alliance partner to move from board
+        waitSecondsBeforeDrop = 0.4; //TODO: Adjust time to wait for alliance partner to move from board
 
         //parking left side
         parkPose = new Pose2d(60, 12, Math.toRadians(90));
 
-        robot.moveArm(0.0);
+        robot.highChamber(1600);
+        //robot.highChamber(1670, 1590);
+        robot.moveClaw(0.9);
         //Move robot to dropPurplePixel based on identified Spike Mark Location
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(moveToChambers.position, moveToChambers.heading)
                         .build());
 
-        robot.safeWaitSeconds(1);
-
+        robot.putSpec();
 
         //TODO : Code to put specimen to high chambers
 
@@ -109,68 +113,90 @@ public class AutonomusBlueLeft extends LinearOpMode {
                         .strafeToLinearHeading(moveBack.position, moveBack.heading)
                         .build());
 
-        robot.moveArm(0.5);
-        robot.safeWaitSeconds(0.5);
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(pickUpSemple2.position, pickUpSemple2.heading)
-                        .build());
 
-        robot.safeWaitSeconds(waitSecondsBeforeDrop);
-
-        //Move robot to basket and to dropYellow sample
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .splineToLinearHeading(moveToBaskets1,0)
-                        .build());
-        robot.safeWaitSeconds(waitSecondsBeforeDrop);
-
-        robot.highBasketUp();
-        robot.safeWaitSeconds(2);
-        robot.moveArm(0.5);
+        robot.moveSliders(0,0.9);
+        robot.sliderServo.setPosition(0.5);
+        robot.rotate.setPosition(1.0);
+        robot.arm.setPosition(0.0);
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(pickUpSemple1.position, pickUpSemple1.heading)
                         .build());
 
+
+        robot.claw.setPosition(0.9);
         robot.safeWaitSeconds(waitSecondsBeforeDrop);
+        robot.arm.setPosition(0.90);
+
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .splineToLinearHeading(moveToBaskets1,0)
+                        .strafeToLinearHeading(moveToBaskets1.position, moveToBaskets1.heading)
                         .build());
 
-        robot.highBasketUp();
-        robot.safeWaitSeconds(2);
-        robot.moveArm(0.5);
 
+        robot.moveSliders(3850,0.9);
+        robot.safeWaitSeconds(3);
+        robot.rotate.setPosition(0.1);
+        robot.arm.setPosition(0.80);
+        robot.claw.setPosition(0.1);
+        robot.moveSliders(0,0.9);
+        robot.safeWaitSeconds(1.5);
+
+        robot.arm.setPosition(0.0);
+        robot.rotate.setPosition(1);
+
+        Actions.runBlocking(
+                drive.actionBuilder(drive.pose)
+                        .strafeToLinearHeading(pickUpSemple2.position, pickUpSemple2.heading)
+                        .build());
+
+        robot.claw.setPosition(0.9);
         robot.safeWaitSeconds(waitSecondsBeforeDrop);
+        robot.arm.setPosition(0.90);
+
+        Actions.runBlocking(
+                drive.actionBuilder(drive.pose)
+                        .strafeToLinearHeading(moveToBaskets1.position, moveToBaskets1.heading)
+                        .build());
+
+
+        robot.moveSliders(3850,0.9);
+        robot.safeWaitSeconds(3);
+        robot.rotate.setPosition(0.1);
+        robot.arm.setPosition(0.80);
+        robot.claw.setPosition(0.1);
+        robot.moveSliders(0,0.9);
+        robot.safeWaitSeconds(1.5);
+
+        robot.rotate.setPosition(1);
+        robot.claw.setPosition(0.3);
+        robot.arm.setPosition(0.0);
+
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(pickUpSemple3.position, pickUpSemple3.heading)
                         .build());
 
+        robot.claw.setPosition(0.9);
         robot.safeWaitSeconds(waitSecondsBeforeDrop);
+
+
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .splineToLinearHeading(moveToBaskets1,0)
+                        .strafeToLinearHeading(moveToBaskets2.position, moveToBaskets2.heading)
                         .build());
 
-        //TODO : Code to drop Semple on Basket
-        robot.highBasketUp();
+        robot.arm.setPosition(0.90);
+        robot.moveSliders(3850,0.9);
+        robot.safeWaitSeconds(3);
+        robot.rotate.setPosition(0.1);
+        robot.arm.setPosition(0.8);
+        robot.claw.setPosition(0.1);
+        robot.safeWaitSeconds(0.1);
+        robot.moveSliders(0,0.9);
         robot.safeWaitSeconds(2);
-        robot.moveArm(0.5);
-
-        robot.safeWaitSeconds(0.5);
-
-        //TODO : Code to drop Pixel on Backdrop
-
-        //Move robot to park in Backstage
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(parkPose.position, parkPose.heading)
-                        .build());
 
     }
 

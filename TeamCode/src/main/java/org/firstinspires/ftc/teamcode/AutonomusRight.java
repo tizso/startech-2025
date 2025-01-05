@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous(name = "Autonomous Right", group = "00-Autonomous", preselectTeleOp = "StarTech")
 public class AutonomusRight extends LinearOpMode {
@@ -14,7 +15,7 @@ public class AutonomusRight extends LinearOpMode {
 
     double POS_ZERO = 0.0;
     double CLAW_OPEN = 0.9;
-    double CLAW_CLOSE = 0.65;
+    double CLAW_CLOSE = 0.9;
     double ARM_WALL = 0.5;
     double ARM_CHAMB = 0.9;
 
@@ -28,16 +29,20 @@ public class AutonomusRight extends LinearOpMode {
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
         //waitForStart();
+        robot.arm.setPosition(0.9);
 
         while (!isStopRequested() && !opModeIsActive()) {
 
             telemetry.addData("Autonomus for ", TEAM_NAME);
+            telemetry.addData("Slider", robot.slider.getCurrentPosition());
             telemetry.update();
         }
 
         //Game Play Button  is pressed
         if (opModeIsActive() && !isStopRequested()) {
             //Build parking trajectory based on last detected target by vision
+            telemetry.addData("Slider", robot.slider.getCurrentPosition());
+            telemetry.update();
             runAutonoumousMode();
         }
 
@@ -54,55 +59,50 @@ public class AutonomusRight extends LinearOpMode {
         Pose2d moveBack2 = new Pose2d(0,0,0);
         Pose2d backSmp2 = new Pose2d(0,0,0);
         Pose2d pushSmp2 = new Pose2d(0,0,0);
+        Pose2d smp31 = new Pose2d(0,0,0);
         Pose2d smp3 = new Pose2d(0,0,0);
         Pose2d moveToChambers1 = new Pose2d(0,0,0);
         Pose2d moveToChambers2 = new Pose2d(0,0,0);
-
-        Pose2d parkPose = new Pose2d(0,0, 0);
+        Pose2d parkPose = new Pose2d(0,0,0);
 
         double waitSecondsBeforeDrop = 0.3;
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
 
-        moveToChambers = new Pose2d(24,12,0);
-        moveToChambers1 = new Pose2d(21.5,15, Math.toRadians(0));
-        moveToChambers2 = new Pose2d(21,14, Math.toRadians(0));
+        moveToChambers = new Pose2d(24,10, Math.toRadians(3));
+        moveToChambers1 = new Pose2d(24.3,16, Math.toRadians(0));
+        moveToChambers2 = new Pose2d(28,18, Math.toRadians(0));
         moveRight = new Pose2d(30,-20, Math.toRadians(180));
-        moveBack = new Pose2d(55, -25, Math.toRadians(181));
-        backSmp1 = new Pose2d(58,-30, Math.toRadians(180));
-        pushSmp1 = new Pose2d(12,-33, Math.toRadians(180));
-        moveBack2 = new Pose2d(58,-31, Math.toRadians(181));
-        backSmp2 = new Pose2d(58,-40, Math.toRadians(180));
-        pushSmp2 = new Pose2d(13.7, -47, Math.toRadians(180));
-        smp3 = new Pose2d(10.5, -25, Math.toRadians(190));
+        moveBack = new Pose2d(55, -25, Math.toRadians(185));
+        backSmp1 = new Pose2d(58,-30, Math.toRadians(185));
+        pushSmp1 = new Pose2d(12,-33, Math.toRadians(185));
+        moveBack2 = new Pose2d(58,-31, Math.toRadians(185));
+        backSmp2 = new Pose2d(58,-41, Math.toRadians(185));
+        pushSmp2 = new Pose2d(13.5, -47, Math.toRadians(180));
+        smp31 = new Pose2d(11.8, -24, Math.toRadians(180));
+        smp3 = new Pose2d(8.8, -24, Math.toRadians(180));
+        parkPose = new Pose2d(4, -26, Math.toRadians(180));
 
 
-
-        //parking left side
-        parkPose = new Pose2d(60, 12, Math.toRadians(90));
-
-        robot.highChamber(1670);
-        robot.moveClaw(0.0);
-        //Move robot to dropPurlePixel based on identified Spike Mark Location
+        robot.highChamber(1600);
+        //robot.highChamber(1670, 1590);
+        robot.moveClaw(0.9);
+        //Move robot to chamber
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(moveToChambers.position, moveToChambers.heading)
                         .build());
-        robot.safeWaitSeconds(waitSecondsBeforeDrop);
-        robot.moveArm(0.5);
-        robot.safeWaitSeconds(0.1);
-        robot.moveArm(0.3);
-        robot.safeWaitSeconds(0.2);
-        robot.moveClaw(CLAW_OPEN);
+
+        //Put first spec
+        robot.putSpec();
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(moveRight.position, moveRight.heading)
                         .build());
-        robot.moveSliders(10, 0.9);
+        robot.moveSliders(0,0.9);
 
-
-        //Move robot to push blue or red sample to HP
+        //Move robot to push blue or red sample1 and samp2 to HP
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(moveBack.position, moveBack.heading)
@@ -112,63 +112,65 @@ public class AutonomusRight extends LinearOpMode {
                         .strafeToLinearHeading(backSmp2.position, backSmp2.heading)
                         .build());
 
-        robot.safeWaitSeconds(waitSecondsBeforeDrop);
-        robot.moveArm(ARM_WALL);
-        robot.moveSliders(250,0.9);
+        if(robot.slider2.getCurrentPosition()<50){
+            robot.slider2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
 
+
+        robot.moveArm(ARM_WALL);
+        //robot.moveSlidersAuto(230, 220,0.9);
+        robot.moveSliders(130 ,0.9);
+
+        //go and pick up second spec
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(pushSmp2.position, pushSmp2.heading)
                         .build());
 
+        robot.safeWaitSeconds(0.3);
         robot.moveClaw(CLAW_CLOSE);
         robot.safeWaitSeconds(waitSecondsBeforeDrop);
         robot.moveArm(ARM_CHAMB);
-        robot.moveSliders(1450, 0.9);
+        robot.moveSliders(1550, 0.9);
+        //robot.moveSlidersAuto(1450, 1392, 0.9);
 
+        //go to chamber whit spec2
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(moveToChambers.position, moveToChambers.heading)
                         .strafeToLinearHeading(moveToChambers1.position, moveToChambers1.heading)
                         .build());
-        robot.safeWaitSeconds(waitSecondsBeforeDrop);
-        robot.moveArm(0.5);
-        robot.safeWaitSeconds(0.1);
-        robot.moveArm(0.3);
-        robot.safeWaitSeconds(0.2);
-        robot.moveClaw(CLAW_OPEN);
+
+        robot.putSpec();
+
         robot.moveArm(ARM_WALL);
-        robot.moveSliders(250, 0.9);
+        robot.moveSliders(230, 0.9);
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
+
+                        .strafeToLinearHeading(smp31.position, smp31.heading)
                         .strafeToLinearHeading(smp3.position, smp3.heading)
                         .build());
+
         robot.moveClaw(CLAW_CLOSE);
         robot.safeWaitSeconds(0.5);
         robot.moveArm(ARM_CHAMB);
-        robot.moveSliders(1500, 0.9);
+        robot.moveSliders(1550, 0.9);
+
+        //robot.moveSlidersAuto(1500, 1430,0.9);
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(moveToChambers.position, moveToChambers.heading)
                         .strafeToLinearHeading(moveToChambers2.position, moveToChambers2.heading)
                         .build());
-        robot.safeWaitSeconds(waitSecondsBeforeDrop);
-        robot.moveArm(0.5);
-        robot.safeWaitSeconds(0.1);
-        robot.moveArm(0.3);
-        robot.safeWaitSeconds(0.2);
-        robot.moveClaw(CLAW_OPEN);
+
+        robot.putSpec();
+
         Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(smp3.position, smp3.heading)
-                        .build());
-        //Move robot to parking
-        /*Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(parkPose.position, parkPose.heading)
                         .build());
-*/
     }
 
 
