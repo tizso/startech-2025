@@ -82,16 +82,16 @@ public class TeleOpStarTech extends LinearOpMode {
                 slow = !slow;
 
             } else if (gamepad1.b){
-                robot.moveSliders(300, sliderSpeed);
+                robot.moveSliders(200, sliderSpeed);
                 //robot.moveSliders(300, 285, sliderSpeed);
 
             }
 
             else if (gamepad1.x){
-                robot.moveSliders(1800, sliderSpeed);
+                robot.moveSliders(945, sliderSpeed);
                 //robot.moveSliders(1800, 1725,sliderSpeed);
             } else if(gamepad1.y){
-                robot.moveSliders(3900, sliderSpeed);
+                robot.moveSliders(2770, sliderSpeed);
                 //robot.moveSliders(3900, 3770, sliderSpeed);
             }
             else if(gamepad1.dpad_left) {
@@ -104,22 +104,22 @@ public class TeleOpStarTech extends LinearOpMode {
             else if (gamepad1.dpad_right){
                 /* This is the correct height to score SPECIMEN on the HIGH CHAMBER */
                 //armPosition = ARM_SCORE_SPECIMEN;
-                sleep(500);
+                robot.robotUpDown(15000, 0.9);
             }
             else if (gamepad1.dpad_up){
                 /* This sets the arm to vertical to hook onto the LOW RUNG for hanging */
                 //armPosition = ARM_ATTACH_HANGING_HOOK;
-                sleep(500);
+                robot.slideragatareUp(850);
             }
             else if (gamepad1.dpad_down){
                 /* this moves the arm down to lift the robot up once it has been hooked */
                 //armPosition = ARM_WINCH_ROBOT;
-                sleep(500);
+                robot.slideragatareUp(0);
             } else if (gamepad1.left_bumper) {
                 sleep(500);
 
             } else if (gamepad1.right_bumper) {
-                robot.moveSliders(0,0.9);
+                robot.moveSliders(0, 0.9);
             }
 
             SLOW_DOWN_FACTOR = slow?0.3:0.9;
@@ -136,8 +136,6 @@ public class TeleOpStarTech extends LinearOpMode {
                 sleep(200);
             } else if(currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
                 claw = !claw;
-            } else if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
-                sliderServo = !sliderServo;
             } else if(currentGamepad2.back && !previousGamepad2.back){
                 sd = !sd;
             } else if(gamepad2.dpad_down){
@@ -192,7 +190,7 @@ public class TeleOpStarTech extends LinearOpMode {
 
             }*/
 
-            if((robot.slider2.getCurrentPosition()<200 && !gamepad1.x && !gamepad1.y && !gamepad1.b) || gamepad1.left_bumper){
+            if((robot.slider2.getCurrentPosition()<150 && !gamepad1.x && !gamepad1.y && !gamepad1.b) || gamepad1.left_bumper){
                 robot.slider2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 
@@ -225,3 +223,4 @@ public class TeleOpStarTech extends LinearOpMode {
         }
     }
 }
+

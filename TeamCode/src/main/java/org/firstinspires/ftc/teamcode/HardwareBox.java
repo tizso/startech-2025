@@ -11,11 +11,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class HardwareBox extends LinearOpMode{
 
-    double SLIDER_DIFF = 0.956;
+    double SLIDER_DIFF = 0.9435;
     //public NormalizedColorSensor color;
 
     public DcMotor slider = null;
     public DcMotor slider2 = null;
+    public DcMotor agatare = null;
+    public DcMotor slideragatare = null;
 
     //public CRServo collector = null;
     public Servo claw = null;
@@ -24,7 +26,7 @@ public class HardwareBox extends LinearOpMode{
     public Servo rotate = null;
     public Servo sliderServo = null;
 
-    HardwareMap hwMap		   =  null;
+    HardwareMap hwMap =  null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
@@ -41,6 +43,8 @@ public class HardwareBox extends LinearOpMode{
         // Define and Initialize Motors
         slider = hwMap.get(DcMotor.class, "Slider");
         slider2 = hwMap.get(DcMotor.class, "Slider2");
+        agatare = hwMap.get(DcMotor.class, "agatare");
+        slideragatare = hwMap.get(DcMotor.class, "slideragatare");
 
         slider.setDirection(DcMotorSimple.Direction.FORWARD);
         slider2.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -56,6 +60,16 @@ public class HardwareBox extends LinearOpMode{
         slider2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slider2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        agatare.setPower(0.0);
+        agatare.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        agatare.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        agatare.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        slideragatare.setPower(0.0);
+        slideragatare.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slideragatare.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideragatare.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         //color = hardwareMap.get(NormalizedColorSensor.class, "color");
 
         // Define and initialize ALL installed servos.
@@ -63,8 +77,6 @@ public class HardwareBox extends LinearOpMode{
         arm = hwMap.get(Servo.class, "arm");
         rotate = hwMap.get(Servo.class, "rotate");
         sliderServo = hwMap.get(Servo.class, "slide");
-
-
 
 
         claw.setPosition(0.9);
@@ -83,20 +95,20 @@ public class HardwareBox extends LinearOpMode{
     }
 
 
-   /* public void sliderUp(){
-        slider.setDirection(DcMotorEx.Direction.FORWARD);
-        slider.setTargetPosition(240);
-        slider.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slider.setPower(0.7);
-
-        safeWaitSeconds(1);
-    }*/
+    public void slideragatareUp(int value){
+        slideragatare.setTargetPosition(value);
+        slideragatare.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideragatare.setPower(0.9);
+    }
 
     public void moveArm(double a){
         arm.setPosition(a);
     }
     public void moveClaw(double value){
         claw.setPosition(value);
+    }
+    public void moveServoSlider(double value){
+        sliderServo.setPosition(value);
     }
     public void moveSliders(int v1, double speed){
 
@@ -108,8 +120,14 @@ public class HardwareBox extends LinearOpMode{
 
         slider2.setTargetPosition(v2);
         slider2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slider2.setPower(speed);
+        slider2.setPower(0.92);
 
+    }
+
+    public void robotUpDown(int value, double speed){
+        agatare.setTargetPosition(value);
+        agatare.setMode((DcMotor.RunMode.RUN_TO_POSITION));
+        agatare.setPower(speed);
     }
 
     public void highChamber(int v1){
@@ -125,18 +143,22 @@ public class HardwareBox extends LinearOpMode{
         arm.setPosition(0.9);
     }
 
-    public void wall(){
-
+    public void putInBasket(){
+        moveSliders(2770,0.9);
+        safeWaitSeconds(2.5);
+        rotate.setPosition(0.1);
+        arm.setPosition(0.8);
+        claw.setPosition(0.1);
+        moveSliders(0,0.9);
+        safeWaitSeconds(1.5);
     }
 
     public void putSpec(){
-        safeWaitSeconds(0.2);
-        moveArm(0.5);
         safeWaitSeconds(0.1);
-        moveArm(0.3);
+        moveClaw(0.2);
         safeWaitSeconds(0.2);
-        moveClaw(0.0);
-
+        moveServoSlider(0.1);
+        moveSliders(750, 0.9);
 
     }
 

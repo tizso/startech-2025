@@ -63,30 +63,33 @@ public class AutonomusRight extends LinearOpMode {
         Pose2d smp3 = new Pose2d(0,0,0);
         Pose2d moveToChambers1 = new Pose2d(0,0,0);
         Pose2d moveToChambers2 = new Pose2d(0,0,0);
+        Pose2d moveToChambers3 = new Pose2d(0,0,0);
         Pose2d parkPose = new Pose2d(0,0,0);
 
         double waitSecondsBeforeDrop = 0.3;
 
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
 
-        moveToChambers = new Pose2d(24,10, Math.toRadians(3));
-        moveToChambers1 = new Pose2d(24.3,16, Math.toRadians(0));
-        moveToChambers2 = new Pose2d(28,18, Math.toRadians(0));
+        moveToChambers = new Pose2d(32.5,13, Math.toRadians(3));
+        moveToChambers1 = new Pose2d(19,16, Math.toRadians(0));
+        moveToChambers2 = new Pose2d(30,16, Math.toRadians(3));
+        moveToChambers3 = new Pose2d(30,18, Math.toRadians(3));
         moveRight = new Pose2d(30,-20, Math.toRadians(180));
         moveBack = new Pose2d(55, -25, Math.toRadians(185));
         backSmp1 = new Pose2d(58,-30, Math.toRadians(185));
         pushSmp1 = new Pose2d(12,-33, Math.toRadians(185));
         moveBack2 = new Pose2d(58,-31, Math.toRadians(185));
         backSmp2 = new Pose2d(58,-41, Math.toRadians(185));
-        pushSmp2 = new Pose2d(13.5, -47, Math.toRadians(180));
-        smp31 = new Pose2d(11.8, -24, Math.toRadians(180));
-        smp3 = new Pose2d(8.8, -24, Math.toRadians(180));
-        parkPose = new Pose2d(4, -26, Math.toRadians(180));
+        pushSmp2 = new Pose2d(11.8, -47, Math.toRadians(180));
+        smp31 = new Pose2d(13.5, -26, Math.toRadians(185));
+        smp3 = new Pose2d(10.3, -26, Math.toRadians(185));
+        parkPose = new Pose2d(14, -26, Math.toRadians(180));
 
 
-        robot.highChamber(1600);
+        robot.highChamber(940);
         //robot.highChamber(1670, 1590);
         robot.moveClaw(0.9);
+        robot.moveServoSlider(0.9);
         //Move robot to chamber
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
@@ -118,7 +121,6 @@ public class AutonomusRight extends LinearOpMode {
 
 
         robot.moveArm(ARM_WALL);
-        //robot.moveSlidersAuto(230, 220,0.9);
         robot.moveSliders(130 ,0.9);
 
         //go and pick up second spec
@@ -129,40 +131,46 @@ public class AutonomusRight extends LinearOpMode {
 
         robot.safeWaitSeconds(0.3);
         robot.moveClaw(CLAW_CLOSE);
-        robot.safeWaitSeconds(waitSecondsBeforeDrop);
+        robot.safeWaitSeconds(0.5);
+        robot.moveSliders(950, 0.9);
         robot.moveArm(ARM_CHAMB);
-        robot.moveSliders(1550, 0.9);
-        //robot.moveSlidersAuto(1450, 1392, 0.9);
 
+        robot.moveServoSlider(0.9);
         //go to chamber whit spec2
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(moveToChambers.position, moveToChambers.heading)
                         .strafeToLinearHeading(moveToChambers1.position, moveToChambers1.heading)
+                        .strafeToLinearHeading(moveToChambers2.position, moveToChambers2.heading)
                         .build());
 
         robot.putSpec();
-
-        robot.moveArm(ARM_WALL);
-        robot.moveSliders(230, 0.9);
+        robot.safeWaitSeconds(0.5);
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-
                         .strafeToLinearHeading(smp31.position, smp31.heading)
+                        .build());
+
+        robot.moveArm(ARM_WALL);
+        robot.moveSliders(130, 0.9);
+
+        Actions.runBlocking(
+                drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(smp3.position, smp3.heading)
                         .build());
 
+
+        robot.safeWaitSeconds(0.5);
         robot.moveClaw(CLAW_CLOSE);
         robot.safeWaitSeconds(0.5);
+        robot.moveSliders(945, 0.9);
         robot.moveArm(ARM_CHAMB);
-        robot.moveSliders(1550, 0.9);
+        robot.moveServoSlider(0.9);
 
-        //robot.moveSlidersAuto(1500, 1430,0.9);
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(moveToChambers.position, moveToChambers.heading)
-                        .strafeToLinearHeading(moveToChambers2.position, moveToChambers2.heading)
+                        .strafeToLinearHeading(moveToChambers1.position, moveToChambers1.heading)
+                        .strafeToLinearHeading(moveToChambers3.position, moveToChambers3.heading)
                         .build());
 
         robot.putSpec();
